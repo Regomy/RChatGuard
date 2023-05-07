@@ -1,0 +1,13 @@
+name: RChatGuard
+version: 1.0
+main: me.rejomy.rchatguard.Main
+commands:
+  rchatguard:
+    aliases:
+      - rcg
+      - rchat
+      - rcguard
+      - rchatg
+      - chatguard
+      - cg
+    permission: rchatguard.command

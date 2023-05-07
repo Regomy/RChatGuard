@@ -15,11 +15,8 @@ object StringSimilarity {
         }
         val longerLength = longer.length
         return if (longerLength == 0) {
-            1.0 /* both strings are zero length */
+            1.0
         } else (longerLength - editDistance(longer, shorter)) / longerLength.toDouble()
-        /* // If you have Apache Commons Text, you can use it to calculate the edit distance:
-    LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
-    return (longerLength - levenshteinDistance.apply(longer, shorter)) / (double) longerLength; */
     }
 
     // Example implementation of the Levenshtein Edit Distance
