@@ -30,15 +30,6 @@ class Chat : Listener {
                     event.recipients.remove(receiver)
         }
 
-        if (playerOldMessageDelayMap.containsKey(player) && smallDelay(
-                playerOldMessageDelayMap[player]!!,
-                chat_delay
-            )
-        ) {
-            addChatViolation(player, message, "Delay $chat_delay > ${playerOldMessageDelayMap[player]!! / 1000}")
-            sendTitle(player, "&7✎ Подождите перед отправкой сообщния!")
-        }
-
         if (autoprivatemsg) {
             val array = message.split(" ")
             if (array.size > 1 && (perm.isNotEmpty() && player.hasPermission(perm) || perm.isEmpty()) && !player.name.equals(array[0]))
@@ -54,12 +45,23 @@ class Chat : Listener {
                 }
         }
 
-        if(rep_text && checkRepeat(message)) {
+        val word = badWord(message)
+
+        if (word.isNotEmpty()) {
+            addChatViolation(player, message, "REGEX n${words.indexOf(word) + 1}")
+            removeReceivers()
+            return
+        } else if (playerOldMessageDelayMap.containsKey(player) && smallDelay(
+                playerOldMessageDelayMap[player]!!,
+                chat_delay
+            )
+        ) {
+            addChatViolation(player, message, "Delay $chat_delay > ${(System.currentTimeMillis() - playerOldMessageDelayMap[player]!!).toFloat() / 1000.0}")
+            sendTitle(player, "&7✎ Подождите перед отправкой сообщния!")
+        } else if(rep_text && checkRepeat(message)) {
             addChatViolation(player, message, "RepeatLetter")
             sendTitle(player, "&7✎ Ваше сообщение не является целесообразным!")
-        }
-
-        if (playerOldMessageMap.containsKey(player) && smallDelay(
+        } else if (playerOldMessageMap.containsKey(player) && smallDelay(
                 playerOldMessageDelayMap[player]!!,
                 10
             ) && StringSimilarity.similarity(
@@ -77,16 +79,6 @@ class Chat : Listener {
                 if (Regex("\\s${po.name}\\s").containsMatchIn(message))
                     event.message = message.toLowerCase().replace(" ${po.name.toLowerCase()}", " ${po.name}")
         }
-
-        val word = badWord(message)
-
-        if (word.isNotEmpty()) {
-            addChatViolation(player, message, "REGEX n${words.indexOf(word) + 1}")
-            removeReceivers()
-            return
-        }
-
-        // Проверка на плохие слова с действиями
 
         playerOldMessageDelayMap[player] = System.currentTimeMillis()
         playerOldMessageMap[player] = message

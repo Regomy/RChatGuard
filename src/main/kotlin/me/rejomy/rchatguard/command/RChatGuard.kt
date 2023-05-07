@@ -19,18 +19,34 @@ class RChatGuard: CommandExecutor {
                 "reload", "релоад" -> {
                     INSTANCE.saveDefaultConfig()
                     Settings()
+                    sender.sendMessage("Плагин перезагружен!")
                 }
                 "remove", "delete" -> {
-                    if(args.size == 2)
+                    if(args.size == 2) {
                         INSTANCE.db.delete(args[1])
-                    else
+                        sender.sendMessage("Игрок ${args[1]} был стёрт из базы!")
+                    } else
                         sender.sendMessage("Удаление игрока требует такой синтаксис: /cg remove НИК")
                 }
 
+                "vl" -> {
+                    if(args.size == 2)
+                       sender.sendMessage(INSTANCE.db.getViolation(args[1]).toString())
+                    else
+                        sender.sendMessage("Просмотр нарушений игрока требует такой синтаксис: /cg vl НИК")
+                }
+
+                "set" -> {
+                    if(args.size == 3) {
+                        INSTANCE.db.set(args[1], args[2].toInt())
+                        sender.sendMessage("Игроку ${args[1]} установлено ${args[2]}")
+                    } else
+                        sender.sendMessage("Установка нарушений игроку: /cg set НИК кол-во")
+                }
+
             }
-        } else {
-            sender.sendMessage("/cg remove|delete|reload")
-        }
+        } else
+            sender.sendMessage("/cg remove|delete|reload|vl|set")
         return false
     }
 }

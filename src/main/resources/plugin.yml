@@ -11,3 +11,4 @@ commands:
       - chatguard
       - cg
     permission: rchatguard.command
+    permission-message: §4У вас недостаточно прав!

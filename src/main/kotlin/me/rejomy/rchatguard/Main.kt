@@ -1,5 +1,6 @@
 package me.rejomy.rchatguard
 
+import me.rejomy.rchatguard.command.RChatGuard
 import me.rejomy.rchatguard.database.DataBase
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -14,6 +15,7 @@ class Main: JavaPlugin() {
         INSTANCE = this
         Settings()
         db = DataBase()
+        getCommand("rchatguard").executor = RChatGuard()
     }
 
 }

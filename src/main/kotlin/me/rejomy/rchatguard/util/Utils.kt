@@ -98,7 +98,7 @@ fun log(type: String, player: String, message: String, detect: String) {
     fun compileMessage(): String {
         val attribute = "§8§m---------------"
         val prefix = "\n§8|§7"
-        return "§7\n$attribute$prefix $player detected in $detect$prefix Type: $type $prefix Message: $message\n$attribute\n§7"
+        return "§7\n$attribute$prefix $player detected in $detect$prefix Type: $type $prefix Message: $message$prefix Violation: ${INSTANCE.db.getViolation(player)}\n$attribute\n§7"
     }
 
     val compileMsg = compileMessage()
