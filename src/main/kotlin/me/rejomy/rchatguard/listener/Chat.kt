@@ -41,7 +41,7 @@ class Chat : Listener {
 
         if (autoprivatemsg) {
             val array = message.split(" ")
-            if ((perm.isNotEmpty() && player.hasPermission(perm) || perm.isEmpty()) && !player.name.equals(array[0]))
+            if (array.size > 1 && (perm.isNotEmpty() && player.hasPermission(perm) || perm.isEmpty()) && !player.name.equals(array[0]))
                 for (target in Bukkit.getOnlinePlayers()) {
                     if (target.name.equals(array[0].replace(",", ""))) {
                         Bukkit.getScheduler().scheduleSyncDelayedTask(INSTANCE) {
