@@ -1,8 +1,19 @@
+database:
+  # mysql / sqlite
+  type: sqlite
+
+  mysql:
+    host: ""
+    db name: ""
+    port: ""
+    user name: ""
+    password: ""
+
 # Проверять сообщения в чате
 Chat:
   enable: true
   # Задержка перед отправкой сообщения в секундах
-  delay: 1
+  delay: 0.8
 
 # Проверять сообщения в командах
 Command:
@@ -16,7 +27,7 @@ Command:
     - me
     - r
   # Задержка перед отправкой сообщения в секундах
-  delay: 3
+  delay: 2.5
 
 block:
   # Проверка на повторяющиеся сообщения

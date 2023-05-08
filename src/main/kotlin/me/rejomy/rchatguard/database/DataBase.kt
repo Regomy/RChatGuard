@@ -1,40 +1,41 @@
 package me.rejomy.rchatguard.database
 
+import org.bukkit.Bukkit
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.ResultSet
 import java.sql.Statement
-import kotlin.concurrent.thread
 
-class DataBase {
+open class DataBase(clazz: String, val link: String, val insert: String) {
 
-    private val url: String = "jdbc:sqlite:plugins/RChatGuard/users.db"
     private var statement: Statement
     private var connection: Connection
 
     init {
-        Class.forName("org.sqlite.JDBC").newInstance()
+        Class.forName(clazz).newInstance()
         connection = connection()
         statement = connection.createStatement()
-        statement.executeUpdate("CREATE TABLE IF NOT EXISTS users ('name' TEXT, 'violation' TEXT)")
+        statement.executeUpdate("CREATE TABLE IF NOT EXISTS users (name varchar(255) PRIMARY KEY, violation TEXT NOT NULL)")
     }
 
-    fun set(name: String, violation: Int) {
-        statement.executeUpdate("INSERT INTO users VALUES ('$name', '$violation')")
+    fun add(player: String, level: Int) {
+        statement.executeUpdate("INSERT INTO users (name, violation) VALUES ('$player',$level) $insert violation=$level")
     }
 
-    fun delete(name: String) {
-        statement.executeUpdate("DELETE FROM users WHERE name='$name'")
+    fun remove(player: String) {
+        statement.executeUpdate("DELETE FROM users WHERE name='$player'")
+    }
+
+    fun get(player: String): Int? {
+        val result = statement.executeQuery("SELECT violation FROM users WHERE name = '$player'")
+        return if(result.next()) result.getInt("violation") else 0
     }
 
     private fun connection(): Connection {
-        return DriverManager.getConnection(url)
+        return DriverManager.getConnection(link)
     }
 
-    fun getViolation(name: String): Int {
-        val result: ResultSet =
-            connection.createStatement().executeQuery("SELECT COUNT(*) FROM users WHERE name = '$name'")
-        return result.getInt(1)
+    fun closeConnection() {
+        connection.close()
     }
 
 }

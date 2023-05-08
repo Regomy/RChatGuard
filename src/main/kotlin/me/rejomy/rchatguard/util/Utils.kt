@@ -2,16 +2,18 @@ package me.rejomy.rchatguard.util
 
 import me.rejomy.rchatguard.INSTANCE
 import me.rejomy.rchatguard.caps
+import me.rejomy.rchatguard.dataBase
 import me.rejomy.rchatguard.words
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.regex.Pattern
+import kotlin.math.ceil
 
 fun sendTitle(player: Player, subtitle: String) {
     player.sendTitle("&6✕ &eＷＡＲＮ &6✕".replace("&", "§"), subtitle.replace("&", "§"))
 }
 
-fun smallDelay(time: Long, delay: Int): Boolean {
+fun smallDelay(time: Long, delay: Double): Boolean {
     return System.currentTimeMillis() - time < delay * 1000
 }
 
@@ -30,7 +32,6 @@ fun capsCheck(text: String): Boolean {
 
 fun checkRepeat(message: String): Boolean {
     val length = message.length
-    if (length <= 4) return false
     val word = message.split("")
     for (letter in word) {
         var amount = 0
@@ -39,8 +40,13 @@ fun checkRepeat(message: String): Boolean {
             if (letter == repeat)
                 amount++
 
-        if (length / 2 <= amount)
-            return true
+        if(length > 4) {
+            if (ceil((length / 2).toDouble()) <= amount)
+                return true
+        } else if (length > 2){
+            if (length == amount)
+                return true
+        }
     }
     return false
 }
@@ -50,7 +56,7 @@ fun addViolation(player: Player, type: String, message: String, detect: String) 
     var maxAmount = 0
 
     val mainSection = INSTANCE.config.getConfigurationSection("violation")
-    var violation = INSTANCE.db.getViolation(player.name)
+    var violation = (if(dataBase.get(player.name) != null) dataBase.get(player.name) else 0)!!
     for (key in mainSection.getKeys(false)) {
         val amount = key.toInt()
         if (amount > maxAmount) maxAmount = amount
@@ -64,13 +70,12 @@ fun addViolation(player: Player, type: String, message: String, detect: String) 
                 }
         }
     }
+    violation += 1
+    dataBase.add(player.name, violation)
+    log(type, player.name, message, detect)
 
     if (violation > maxAmount)
-        INSTANCE.db.delete(player.name)
-
-    log(type, player.name, message, detect)
-    violation += 1
-    INSTANCE.db.set(player.name, violation)
+        dataBase.remove(player.name)
 }
 
 fun arraytostring(massive: List<String>): String {
@@ -98,7 +103,11 @@ fun log(type: String, player: String, message: String, detect: String) {
     fun compileMessage(): String {
         val attribute = "§8§m---------------"
         val prefix = "\n§8|§7"
-        return "§7\n$attribute$prefix $player detected in $detect$prefix Type: $type $prefix Message: $message$prefix Violation: ${INSTANCE.db.getViolation(player)}\n$attribute\n§7"
+        return "§7\n$attribute$prefix $player detected in $detect$prefix Type: $type $prefix Message: $message$prefix Violation: ${
+            dataBase.get(
+                player
+            )
+        }\n$attribute\n§7"
     }
 
     val compileMsg = compileMessage()

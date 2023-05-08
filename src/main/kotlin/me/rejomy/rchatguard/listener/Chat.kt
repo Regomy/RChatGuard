@@ -63,7 +63,7 @@ class Chat : Listener {
             sendTitle(player, "&7✎ Ваше сообщение не является целесообразным!")
         } else if (playerOldMessageMap.containsKey(player) && smallDelay(
                 playerOldMessageDelayMap[player]!!,
-                10
+                10.0
             ) && StringSimilarity.similarity(
                 message,
                 playerOldMessageMap[player]!!

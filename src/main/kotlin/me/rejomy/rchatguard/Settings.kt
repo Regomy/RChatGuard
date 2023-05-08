@@ -4,8 +4,8 @@ import me.rejomy.rchatguard.listener.Chat
 import me.rejomy.rchatguard.listener.Command
 import org.bukkit.Bukkit
 
-var chat_delay = 0
-var command_delay = 0
+var chat_delay = 0.0
+var command_delay = 0.0
 var command_check = mutableListOf<String>()
 var command_blacklist = false
 var old_msg = false
@@ -20,7 +20,7 @@ class Settings {
 
         if (search("Chat.enable")) {
 
-            chat_delay = INSTANCE.config.getInt("Chat.delay")
+            chat_delay = INSTANCE.config.getDouble("Chat.delay")
 
             Bukkit.getPluginManager().registerEvents(Chat(), INSTANCE)
 
@@ -32,7 +32,7 @@ class Settings {
         }
 
         if (search("Command.enable")) {
-            command_delay = INSTANCE.config.getInt("Command.delay")
+            command_delay = INSTANCE.config.getDouble("Command.delay")
 
             Bukkit.getPluginManager().registerEvents(Command(), INSTANCE)
 

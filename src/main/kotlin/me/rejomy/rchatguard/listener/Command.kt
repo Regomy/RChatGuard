@@ -49,7 +49,7 @@ class Command : Listener {
             sendTitle(player, "&7✎ Ваше сообщение не является целесообразным!")
         }
 
-        if (playerOldMessageMap.containsKey(player) && smallDelay(playerOldMessageDelayMap[player]!!, 10)
+        if (playerOldMessageMap.containsKey(player) && smallDelay(playerOldMessageDelayMap[player]!!, 10.0)
             && StringSimilarity.similarity(message, playerOldMessageMap[player]!!) > 0.8
         )
             addCommandViolation(player, message, "StringSimilarity")
