@@ -7,7 +7,7 @@ import java.sql.Statement
 
 open class DataBase(clazz: String, val link: String, val insert: String) {
 
-    private var statement: Statement
+    protected var statement: Statement
     private var connection: Connection
 
     init {
@@ -17,7 +17,7 @@ open class DataBase(clazz: String, val link: String, val insert: String) {
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS users (name varchar(255) PRIMARY KEY, violation TEXT NOT NULL)")
     }
 
-    fun add(player: String, level: Int) {
+    open fun add(player: String, level: Int) {
         statement.executeUpdate("INSERT INTO users (name, violation) VALUES ('$player',$level) $insert violation=$level")
     }
 
